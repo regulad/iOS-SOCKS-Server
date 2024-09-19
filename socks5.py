@@ -2,6 +2,7 @@
 # Socks5/HTTP Proxy server for Pythonista by @nneonneo
 # Pretty statistics view and IPv6 support added by @philrosenthal
 
+import cb
 import ipaddress
 import logging
 import socket
@@ -26,6 +27,11 @@ LISTEN_HOST = "0.0.0.0"
 SOCKS_PORT = 9876
 HTTP_PORT = 9877
 WPAD_PORT = 8088
+
+# to stay alive, open some bluetooth connections
+
+cb.set_central_delegate(object())
+cb.scan_for_peripherals()
 
 # Try to keep the screen from turning off (iOS)
 try:
@@ -304,3 +310,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("Shutting down.")
         wpad_server.shutdown()
+        cb.reset()
