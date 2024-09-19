@@ -3,6 +3,7 @@
 # Pretty statistics view and IPv6 support added by @philrosenthal
 
 import ipaddress
+import location
 import logging
 import socket
 import threading
@@ -26,6 +27,9 @@ LISTEN_HOST = "0.0.0.0"
 SOCKS_PORT = 9876
 HTTP_PORT = 9877
 WPAD_PORT = 8088
+
+# To stay alive in the background, begin recieving location information
+location.start_updates()
 
 # Try to keep the screen from turning off (iOS)
 try:
