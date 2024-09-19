@@ -30,7 +30,30 @@ WPAD_PORT = 8088
 
 # to stay alive, open some bluetooth connections
 
-cb.set_central_delegate(object())
+class CoreBluetoothDelegate(object):
+    def __init__(self):
+        self.peripherals = []
+
+    def did_discover_peripheral(self, p):
+        # You would typically check the peripheral's name/uuid here,
+        # and connect via cb.connect_peripheral(p).
+        # You should also keep a reference to p (e.g. self.peripheral = p),
+        # so that it doesn't get garbage-collected.
+        # Note that this may get called multiple times for a single peripheral.
+        if p not in self.peripherals:
+            cb.connect_peripheral(p)
+            self.peripherals.append(p)
+            logging.info(f"latched onto {p.uuid} cb") 
+
+    def did_fail_to_connect_peripheral(self, p, error):
+        # `error` is a tuple of error code (integer) and description (string)
+        self.peripherals.remove(p)
+
+    def did_disconnect_peripheral(self, p, error):
+        # error is a tuple of error code (integer) and description (string)
+        self.peripherals.remove(p)
+
+cb.set_central_delegate(CoreBluetoothDelegate())
 cb.scan_for_peripherals()
 
 # Try to keep the screen from turning off (iOS)
