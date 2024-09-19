@@ -5,6 +5,7 @@
 import ipaddress
 import logging
 import socket
+import sound
 import threading
 
 from lib.socks5_server import AsyncSocks5Handler
@@ -26,6 +27,13 @@ LISTEN_HOST = "0.0.0.0"
 SOCKS_PORT = 9876
 HTTP_PORT = 9877
 WPAD_PORT = 8088
+
+# To run in the background, we play a silent audio file. This approach is taken from Riley Testut's Clip https://github.com/rileytestut/Clip/commit/cbe577db528f0409383d46c78539a7c6fd2aa31e#diff-8c162fce5d0d13a1bcfbcfce9a44d55cf535ea9e9acddd2c3ff02892fc34fa12
+
+silent_audio_player = sound.Player("Silence.m4a")
+silent_audio_player.play()
+silent_audio_player.number_of_loops = -1
+print("Using silent audio to attempt to stay alive in background")
 
 # Try to keep the screen from turning off (iOS)
 try:
